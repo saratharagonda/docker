@@ -1,4 +1,4 @@
 FROM nginx
-EXPOSE code 80 will be using
+EXPOSE 80
 MAINTAINER sarath
 COPY index.html /usr/share/nginx/html/
