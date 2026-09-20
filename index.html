@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BookMyShow · movies, events & more</title>
+  <!-- Google Fonts & Font Awesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #0b0d10;
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ---------- SCROLLBAR ---------- */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #14171c;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #3a4252;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #f5c518;
+    }
+
+    /* ---------- HEADER / NAVBAR ---------- */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11, 13, 16, 0.85);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid #1e2128;
+      padding: 0 2rem;
+    }
+
+    .nav-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      gap: 1rem;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 800;
+      font-size: 1.5rem;
+      letter-spacing: -0.04em;
+      color: white;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .logo i {
+      color: #f5c518;
+      background: #1e2128;
+      padding: 0.45rem 0.55rem;
+      border-radius: 0.8rem;
+      font-size: 1.2rem;
+      box-shadow: 0 6px 14px -6px rgba(245, 197, 24, 0.3);
+    }
+
+    .logo span {
+      background: linear-gradient(130deg, #ffffff, #cfd9e6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    /* search bar */
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background: #1e2128;
+      border: 1px solid #2a2e36;
+      border-radius: 2.5rem;
+      padding: 0.45rem 1rem;
+      width: 100%;
+      max-width: 440px;
+      transition: all 0.2s;
+    }
+
+    .search-bar:focus-within {
+      border-color: #f5c518;
+      box-shadow: 0 0 0 3px rgba(245, 197, 24, 0.12);
+    }
+
+    .search-bar i {
+      color: #7a8494;
+      font-size: 0.9rem;
+    }
+
+    .search-bar input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      padding: 0.35rem 0.6rem;
+      font-size: 0.9rem;
+      width: 100%;
+    }
+
+    .search-bar input::placeholder {
+      color: #5e6678;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .nav-right a {
+      color: #b0b8c5;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+
+    .nav-right a:hover {
+      color: #fff;
+    }
+
+    .sign-in-btn {
+      background: #f5c518;
+      color: #0b0d10 !important;
+      font-weight: 700;
+      padding: 0.55rem 1.4rem;
+      border-radius: 2.5rem;
+      font-size: 0.85rem !important;
+      transition: all 0.2s;
+      border: 1px solid #f5c518;
+      box-shadow: 0 6px 16px -6px rgba(245, 197, 24, 0.4);
+    }
+
+    .sign-in-btn:hover {
+      background: #ffd93d;
+      transform: scale(1.03);
+      color: #0b0d10 !important;
+    }
+
+    /* mobile menu icon */
+    .menu-icon {
+      display: none;
+      font-size: 1.4rem;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    /* ---------- HERO / BANNER CAROUSEL ---------- */
+    .hero-carousel {
+      position: relative;
+      max-width: 1300px;
+      margin: 1.5rem auto 0;
+      border-radius: 1.8rem;
+      overflow: hidden;
+      aspect-ratio: 21/8;
+      background: #14171c;
+      box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.8);
+    }
+
+    .hero-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      display: flex;
+      align-items: flex-end;
+      padding: 3rem;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .hero-slide.active {
+      opacity: 1;
+      z-index: 2;
+    }
+
+    /* gradient overlays for each slide */
+    .hero-slide::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(11, 13, 16, 0.95) 0%, rgba(11, 13, 16, 0.6) 40%, rgba(11, 13, 16, 0.2) 100%),
+                  linear-gradient(0deg, rgba(11, 13, 16, 0.9) 0%, transparent 60%);
+      z-index: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 520px;
+    }
+
+    .hero-content .tag {
+      display: inline-block;
+      background: rgba(245, 197, 24, 0.15);
+      border: 1px solid rgba(245, 197, 24, 0.4);
+      color: #f5c518;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 0.3rem 0.9rem;
+      border-radius: 2rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .hero-content h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.6rem;
+    }
+
+    .hero-content .meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: #b0b8c5;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-content .meta .rating {
+      background: #f5c518;
+      color: #0b0d10;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 0.4rem;
+      font-size: 0.75rem;
+    }
+
+    .hero-content p {
+      color: #a0a8b8;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: #f5c518;
+      color: #0b0d10;
+      border: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 0.8rem 2rem;
+      border-radius: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 10px 24px -8px rgba(245, 197, 24, 0.5);
+    }
+
+    .btn-primary:hover {
+      background: #ffd93d;
+      transform: scale(1.03);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.8rem 2rem;
+      border-radius: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      backdrop-filter: blur(8px);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* carousel indicators */
+    .carousel-dots {
+      position: absolute;
+      bottom: 1.5rem;
+      right: 2.5rem;
+      z-index: 10;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .dot {
+      width: 28px;
+      height: 4px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.25);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .dot.active {
+      background: #f5c518;
+      width: 40px;
+    }
+
+    /* ---------- SECTION STYLING ---------- */
+    .section {
+      max-width: 1300px;
+      margin: 2.8rem auto 0;
+      padding: 0 0.5rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.3rem;
+    }
+
+    .section-header h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .section-header h2 i {
+      color: #f5c518;
+      font-size: 1.2rem;
+    }
+
+    .section-header a {
+      color: #f5c518;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: opacity 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .section-header a:hover {
+      opacity: 0.8;
+    }
+
+    /* ---------- CATEGORY CHIPS ---------- */
+    .category-row {
+      display: flex;
+      gap: 0.8rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      margin-bottom: 2rem;
+      scrollbar-width: none;
+    }
+
+    .category-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .category-chip {
+      background: #1b1f26;
+      border: 1px solid #2b313b;
+      color: #d1d9e6;
+      padding: 0.6rem 1.4rem;
+      border-radius: 2.5rem;
+      font-weight: 500;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .category-chip i {
+      color: #f5c518;
+      font-size: 0.85rem;
+    }
+
+    .category-chip:hover {
+      background: #232831;
+      border-color: #3d4452;
+    }
+
+    .category-chip.active {
+      background: #f5c518;
+      border-color: #f5c518;
+      color: #0b0d10;
+      font-weight: 700;
+    }
+
+    .category-chip.active i {
+      color: #0b0d10;
+    }
+
+    /* ---------- MOVIE GRID ---------- */
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .movie-card {
+      background: #14171c;
+      border-radius: 1.2rem;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      border: 1px solid #1e2128;
+    }
+
+    .movie-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.7);
+      border-color: #2b313b;
+    }
+
+    .movie-poster {
+      position: relative;
+      aspect-ratio: 2/3;
+      background: #1e2128;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .movie-poster .poster-gradient {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      color: rgba(245, 197, 24, 0.15);
+    }
+
+    .movie-poster .rating-badge {
+      position: absolute;
+      bottom: 0.6rem;
+      left: 0.6rem;
+      background: rgba(11, 13, 16, 0.85);
+      backdrop-filter: blur(6px);
+      color: #f5c518;
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      border: 1px solid rgba(245, 197, 24, 0.3);
+    }
+
+    .movie-poster .rating-badge i {
+      font-size: 0.65rem;
+    }
+
+    .movie-poster .heart-icon {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.6rem;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 1rem;
+      transition: color 0.2s;
+      background: rgba(11, 13, 16, 0.5);
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      backdrop-filter: blur(4px);
+    }
+
+    .movie-card:hover .heart-icon {
+      color: #f5c518;
+    }
+
+    .movie-info {
+      padding: 0.9rem;
+    }
+
+    .movie-info h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .movie-info .genre {
+      color: #7a8494;
+      font-size: 0.78rem;
+      margin-bottom: 0.5rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .movie-info .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .movie-info .cert {
+      background: #232831;
+      border: 1px solid #2b313b;
+      color: #b0b8c5;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.3rem;
+    }
+
+    .movie-info .book-link {
+      color: #f5c518;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: gap 0.2s;
+    }
+
+    .movie-card:hover .book-link {
+      gap: 0.5rem;
+    }
+
+    /* ---------- EVENTS SECTION ---------- */
+    .event-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .event-card {
+      background: #14171c;
+      border-radius: 1.2rem;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      border: 1px solid #1e2128;
+      display: flex;
+    }
+
+    .event-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.6);
+      border-color: #2b313b;
+    }
+
+    .event-poster {
+      width: 110px;
+      flex-shrink: 0;
+      background: #1e2128;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      color: rgba(245, 197, 24, 0.2);
+      position: relative;
+    }
+
+    .event-info {
+      padding: 1rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .event-info h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .event-info .event-meta {
+      color: #7a8494;
+      font-size: 0.78rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .event-info .event-meta i {
+      color: #f5c518;
+      font-size: 0.7rem;
+      width: 14px;
+    }
+
+    .event-info .event-price {
+      color: #f5c518;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-top: 0.3rem;
+    }
+
+    /* ---------- FOOTER ---------- */
+    .footer {
+      max-width: 1300px;
+      margin: 4rem auto 2rem;
+      padding: 2rem 0.5rem 0;
+      border-top: 1px solid #1e2128;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      color: #7a8494;
+      font-size: 0.85rem;
+    }
+
+    .footer-left i {
+      color: #f5c518;
+    }
+
+    .footer-right {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-right a {
+      color: #7a8494;
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+
+    .footer-right a:hover {
+      color: #f5c518;
+    }
+
+    /* ---------- TOAST ---------- */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      background: #1e2128;
+      border-left: 6px solid #f5c518;
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 3rem;
+      font-weight: 500;
+      box-shadow: 0 20px 40px -12px black;
+      transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      pointer-events: none;
+      border: 1px solid #2b313b;
+      backdrop-filter: blur(8px);
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast i {
+      color: #f5c518;
+      font-size: 1.2rem;
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 900px) {
+      .hero-slide {
+        padding: 2rem;
+      }
+      .hero-content h1 {
+        font-size: 2rem;
+      }
+      .search-bar {
+        max-width: 280px;
+      }
+      .nav-right a:not(.sign-in-btn) {
+        display: none;
+      }
+      .menu-icon {
+        display: block;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .navbar {
+        padding: 0 1rem;
+      }
+      .search-bar {
+        display: none;
+      }
+      .hero-carousel {
+        aspect-ratio: 16/10;
+        margin: 1rem 0.5rem 0;
+      }
+      .hero-content h1 {
+        font-size: 1.6rem;
+      }
+      .hero-content p {
+        display: none;
+      }
+      .section {
+        padding: 0 0.8rem;
+      }
+      .movie-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 1rem;
+      }
+      .event-grid {
+        grid-template-columns: 1fr;
+      }
+      .carousel-dots {
+        right: 1.5rem;
+        bottom: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .logo span {
+        font-size: 1.1rem;
+      }
+      .hero-content h1 {
+        font-size: 1.3rem;
+      }
+      .btn-primary, .btn-secondary {
+        padding: 0.6rem 1.4rem;
+        font-size: 0.8rem;
+      }
+      .movie-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== NAVBAR ========== -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-left">
+        <div class="logo" onclick="showToast('Welcome to BookMyShow clone!', 'fa-film')">
+          <i class="fas fa-film"></i>
+          <span>BookMyShow</span>
+        </div>
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search for movies, events, plays, sports..." id="searchInput">
+        </div>
+      </div>
+      <div class="nav-right">
+        <a href="#" onclick="showToast('Location selector coming soon', 'fa-map-pin'); return false;">Mumbai <i class="fas fa-chevron-down" style="font-size:0.7rem;"></i></a>
+        <a href="#" onclick="showToast('Sign in functionality demo', 'fa-user'); return false;">Sign In</a>
+        <a href="#" class="sign-in-btn" onclick="showToast('Welcome back!', 'fa-user-check'); return false;">Sign Up</a>
+        <i class="fas fa-bars menu-icon" onclick="showToast('Mobile menu', 'fa-bars')"></i>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========== HERO CAROUSEL ========== -->
+  <div class="hero-carousel" id="heroCarousel">
+    <!-- slide 1 -->
+    <div class="hero-slide active" data-index="0" style="background-image: url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1400&q=80');">
+      <div class="hero-content">
+        <div class="tag"><i class="fas fa-bolt"></i> Premiere</div>
+        <h1>Dune: Part Two</h1>
+        <div class="meta">
+          <span class="rating"><i class="fas fa-star"></i> 8.8</span>
+          <span><i class="fas fa-clock"></i> 2h 46m</span>
+          <span><i class="fas fa-tag"></i> Sci-Fi, Adventure</span>
+          <span><i class="fas fa-globe"></i> English, Hindi</span>
+        </div>
+        <p>Paul Atreides unites with Chani and the Fremen while seeking revenge against the conspirators who destroyed his family.</p>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="showToast('Booking Dune: Part Two', 'fa-ticket-alt')"><i class="fas fa-ticket-alt"></i> Book tickets</button>
+          <button class="btn-secondary" onclick="showToast('Trailer playing...', 'fa-play')"><i class="fas fa-play"></i> Watch trailer</button>
+        </div>
+      </div>
+    </div>
+    <!-- slide 2 -->
+    <div class="hero-slide" data-index="1" style="background-image: url('https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=1400&q=80');">
+      <div class="hero-content">
+        <div class="tag"><i class="fas fa-fire"></i> Trending</div>
+        <h1>Oppenheimer</h1>
+        <div class="meta">
+          <span class="rating"><i class="fas fa-star"></i> 8.5</span>
+          <span><i class="fas fa-clock"></i> 3h 0m</span>
+          <span><i class="fas fa-tag"></i> Biography, Drama</span>
+          <span><i class="fas fa-globe"></i> English</span>
+        </div>
+        <p>The story of American scientist J. Robert Oppenheimer and his role in the development of the atomic bomb.</p>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="showToast('Booking Oppenheimer', 'fa-ticket-alt')"><i class="fas fa-ticket-alt"></i> Book tickets</button>
+          <button class="btn-secondary" onclick="showToast('Trailer playing...', 'fa-play')"><i class="fas fa-play"></i> Watch trailer</button>
+        </div>
+      </div>
+    </div>
+    <!-- slide 3 -->
+    <div class="hero-slide" data-index="2" style="background-image: url('https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=1400&q=80');">
+      <div class="hero-content">
+        <div class="tag"><i class="fas fa-star"></i> Now Showing</div>
+        <h1>Deadpool & Wolverine</h1>
+        <div class="meta">
+          <span class="rating"><i class="fas fa-star"></i> 8.2</span>
+          <span><i class="fas fa-clock"></i> 2h 7m</span>
+          <span><i class="fas fa-tag"></i> Action, Comedy</span>
+          <span><i class="fas fa-globe"></i> English, Hindi</span>
+        </div>
+        <p>Wolverine is recovering from his injuries when he crosses paths with the loudmouth Deadpool. They team up to defeat a common enemy.</p>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="showToast('Booking Deadpool & Wolverine', 'fa-ticket-alt')"><i class="fas fa-ticket-alt"></i> Book tickets</button>
+          <button class="btn-secondary" onclick="showToast('Trailer playing...', 'fa-play')"><i class="fas fa-play"></i> Watch trailer</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="carousel-dots" id="carouselDots">
+      <div class="dot active" data-index="0"></div>
+      <div class="dot" data-index="1"></div>
+      <div class="dot" data-index="2"></div>
+    </div>
+  </div>
+
+  <!-- ========== CATEGORY CHIPS ========== -->
+  <div class="section">
+    <div class="category-row" id="categoryRow">
+      <div class="category-chip active" data-cat="movies"><i class="fas fa-film"></i> Movies</div>
+      <div class="category-chip" data-cat="events"><i class="fas fa-music"></i> Events</div>
+      <div class="category-chip" data-cat="plays"><i class="fas fa-theater-masks"></i> Plays</div>
+      <div class="category-chip" data-cat="sports"><i class="fas fa-futbol"></i> Sports</div>
+      <div class="category-chip" data-cat="activities"><i class="fas fa-hiking"></i> Activities</div>
+    </div>
+  </div>
+
+  <!-- ========== RECOMMENDED MOVIES ========== -->
+  <div class="section">
+    <div class="section-header">
+      <h2><i class="fas fa-thumbs-up"></i> Recommended Movies</h2>
+      <a href="#" onclick="showToast('See all movies', 'fa-arrow-right'); return false;">See All <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="movie-grid" id="movieGrid">
+      <!-- movie cards injected via JS -->
+    </div>
+  </div>
+
+  <!-- ========== EVENTS SECTION ========== -->
+  <div class="section">
+    <div class="section-header">
+      <h2><i class="fas fa-calendar-star"></i> Live Events Near You</h2>
+      <a href="#" onclick="showToast('See all events', 'fa-arrow-right'); return false;">See All <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="event-grid" id="eventGrid">
+      <!-- event cards injected via JS -->
+    </div>
+  </div>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="footer-left">
+      <i class="fas fa-copyright"></i> 2025 BookMyShow Clone · Built with <i class="fas fa-heart" style="color:#f5c518;"></i> for demo
+    </div>
+    <div class="footer-right">
+      <a href="#" onclick="showToast('About page', 'fa-info-circle'); return false;">About</a>
+      <a href="#" onclick="showToast('Contact page', 'fa-envelope'); return false;">Contact</a>
+      <a href="#" onclick="showToast('Privacy policy', 'fa-shield-alt'); return false;">Privacy</a>
+      <a href="#" onclick="showToast('Terms of service', 'fa-file-contract'); return false;">Terms</a>
+    </div>
+  </footer>
+
+  <!-- ========== TOAST ========== -->
+  <div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i> <span id="toastMessage">Booking confirmed!</span>
+  </div>
+
+  <script>
+    (function() {
+      // ---------- TOAST HELPER ----------
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toastMessage');
+      let toastTimer;
+
+      window.showToast = function(message, iconClass = 'fa-check-circle') {
+        toastMessage.textContent = message;
+        const icon = toast.querySelector('i');
+        icon.className = `fas ${iconClass}`;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toast.classList.remove('show');
+        }, 3000);
+      };
+
+      // ---------- CAROUSEL ----------
+      const slides = document.querySelectorAll('.hero-slide');
+      const dots = document.querySelectorAll('.dot');
+      let currentSlide = 0;
+      let slideInterval;
+
+      function goToSlide(index) {
+        slides.forEach((s, i) => {
+          s.classList.toggle('active', i === index);
+        });
+        dots.forEach((d, i) => {
+          d.classList.toggle('active', i === index);
+        });
+        currentSlide = index;
+      }
+
+      function nextSlide() {
+        goToSlide((currentSlide + 1) % slides.length);
+      }
+
+      function startCarousel() {
+        slideInterval = setInterval(nextSlide, 5000);
+      }
+
+      function resetCarousel() {
+        clearInterval(slideInterval);
+        startCarousel();
+      }
+
+      dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => {
+          goToSlide(i);
+          resetCarousel();
+        });
+      });
+
+      startCarousel();
+
+      // ---------- MOVIE DATA ----------
+      const movies = [
+        { title: 'Dune: Part Two', genre: 'Sci-Fi, Adventure', rating: 8.8, cert: 'UA', icon: 'fa-planet-ringed', bg: 'linear-gradient(145deg, #2d3748, #1a1e26)' },
+        { title: 'Oppenheimer', genre: 'Biography, Drama', rating: 8.5, cert: 'A', icon: 'fa-atom', bg: 'linear-gradient(145deg, #3d2a2a, #1a1e26)' },
+        { title: 'Deadpool & Wolverine', genre: 'Action, Comedy', rating: 8.2, cert: 'A', icon: 'fa-mask', bg: 'linear-gradient(145deg, #3d1a2a, #1a1e26)' },
+        { title: 'Inside Out 2', genre: 'Animation, Family', rating: 7.9, cert: 'U', icon: 'fa-brain', bg: 'linear-gradient(145deg, #2a3d2a, #1a1
